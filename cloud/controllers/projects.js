@@ -1,4 +1,4 @@
-var Project = Parse.Object.extend('project');
+var Project = Parse.Object.extend('Project');
 
 // Display dashboard.
 exports.dashboard = function(req, res) {
