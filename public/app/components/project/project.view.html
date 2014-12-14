@@ -60,7 +60,7 @@
                                           <th>Stack</th>
                                           <th>Action</th>
                                     </tr>
-                                    <tr ng-repeat="project in vm.projects | filter:{type:'IHM'}">
+                                    <tr ng-repeat="project in vm.projects | filter:{type:'IHM'} | orderBy:'name'">
                                           <td>
                                                 {{ project.name }}
                                           </td>
