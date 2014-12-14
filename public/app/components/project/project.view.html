@@ -21,6 +21,7 @@
 							<th>API</th>
 							<th>Status</th>
 							<th>User</th>
+                                          <th>Stack</th>
 							<th>Action</th>
 						</tr>
 						<tr ng-repeat="project in vm.projects | filter:{type:'API'} | orderBy:'name'">
@@ -35,11 +36,20 @@
                                                 <span ng-show="project.user"> {{ project.user.username }} </span>
                                           </td>
                                           <td>
+                                                <span ng-show="project.stack" ng-repeat="stackUser in project.stack">{{ stackUser.username }},&nbsp;</span>
+                                          </td>
+                                          <td>
                                                 <a ng-show="!project.user" ng-click="vm.take(project)" href="">
                                                       <i class="fa fa-times"></i> Take
                                                 </a>
-                                                <a ng-show="project.user.id == user.objectId" ng-click="vm.release(project)" href=""> 
+                                                <a ng-show="project.user && (project.user.objectId != user.objectId) && !vm.userIsInStack(user, project.stack)" ng-click="vm.take(project)" href=""> 
+                                                      <i class="fa fa-times"></i> Take next
+                                                </a>
+                                                <a ng-show="project.user.objectId == user.objectId" ng-click="vm.release(project)" href=""> 
                                                       <i class="fa fa-check"></i> Release
+                                                </a>
+                                                <a ng-show="project.user && (project.user.objectId != user.objectId) && vm.userIsInStack(user, project.stack)" ng-click="vm.release(project)" href=""> 
+                                                      <i class="fa fa-check"></i> Release next
                                                 </a>
                                           </td>
                                     </tr>
@@ -47,6 +57,7 @@
                                           <th>IHM</th>
                                           <th>Status</th>
                                           <th>User</th>
+                                          <th>Stack</th>
                                           <th>Action</th>
                                     </tr>
                                     <tr ng-repeat="project in vm.projects | filter:{type:'IHM'}">
@@ -61,11 +72,20 @@
                                                 <span ng-show="project.user"> {{ project.user.username }} </span>
                                           </td>
                                           <td>
+                                                <span ng-show="project.stack" ng-repeat="stackUser in project.stack">{{ stackUser.username }},&nbsp;</span>
+                                          </td>
+                                          <td>
                                                 <a ng-show="!project.user" ng-click="vm.take(project)" href="">
                                                       <i class="fa fa-times"></i> Take
                                                 </a>
-                                                <a ng-show="project.user.id == user.objectId" ng-click="vm.release(project)" href=""> 
+                                                <a ng-show="project.user && (project.user.objectId != user.objectId) && !vm.userIsInStack(user, project.stack)" ng-click="vm.take(project)" href=""> 
+                                                      <i class="fa fa-times"></i> Take next
+                                                </a>
+                                                <a ng-show="project.user.objectId == user.objectId" ng-click="vm.release(project)" href=""> 
                                                       <i class="fa fa-check"></i> Release
+                                                </a>
+                                                <a ng-show="project.user && (project.user.objectId != user.objectId) && vm.userIsInStack(user, project.stack)" ng-click="vm.release(project)" href=""> 
+                                                      <i class="fa fa-check"></i> Release next
                                                 </a>
                                           </td>
                                     </tr>
