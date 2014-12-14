@@ -4,10 +4,7 @@ var express = require('express');
 var app = express();
 var parseExpressCookieSession = require('parse-express-cookie-session');
 var parseExpressHttpsRedirect = require('parse-express-https-redirect');
-
-var authentication = require('cloud/require-user.js');
-
-var projectsController = require('cloud/controllers/projects.js');
+var authentication = require('cloud/tools/require-user.js');
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
@@ -15,7 +12,7 @@ app.set('view engine', 'ejs');    // Set the template
 app.use(parseExpressHttpsRedirect());
 app.use(express.bodyParser());    // Middleware for reading request 
 app.use(express.methodOverride());
-app.use(express.cookieParser('SECRET_SIGNING_KEY'));
+app.use(express.cookieParser('D!g!tal&o_T0t&ms'));
 app.use(parseExpressCookieSession({
   fetchUser: true,
   key: 'image.sess',
@@ -24,14 +21,17 @@ app.use(parseExpressCookieSession({
   }
 }));
 
-app.get('/project/take/:name', authentication, projectsController.take);
-app.get('/project/release/:name', authentication, projectsController.release);
-app.get('/project/dashboard', authentication, projectsController.dashboard);
+app.get('/', authentication, function(res, res){
+	res.render('index', {
+		user: Parse.User.current(),
+	});
+});
 
-app.use('/user', require('cloud/user'));
+app.use('/api/project', require('cloud/controllers/project'));
+app.use('/user', require('cloud/controllers/user'));
 
 app.use(function(req, res){
-    res.redirect('/project/dashboard');
+    res.redirect('/');
 });
 
 // Attach the Express app to Cloud Code.
