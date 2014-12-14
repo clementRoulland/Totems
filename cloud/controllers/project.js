@@ -102,7 +102,8 @@ module.exports = function(){
 			type: project.get('type'),
 			stack: project.get('stack'),
 			user: project.get('user')?{
-				username: project.get('user').get('username')
+				username: project.get('user').get('username'),
+				id: project.get('user').id,
 			}:undefined,
 		};
 

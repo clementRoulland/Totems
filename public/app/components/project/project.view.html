@@ -38,7 +38,7 @@
                                                 <a ng-show="!project.user" ng-click="vm.take(project)" href="">
                                                       <i class="fa fa-times"></i> Take
                                                 </a>
-                                                <a ng-show="project.user" ng-click="vm.release(project)" href=""> 
+                                                <a ng-show="project.user.id == user.objectId" ng-click="vm.release(project)" href=""> 
                                                       <i class="fa fa-check"></i> Release
                                                 </a>
                                           </td>
@@ -64,7 +64,7 @@
                                                 <a ng-show="!project.user" ng-click="vm.take(project)" href="">
                                                       <i class="fa fa-times"></i> Take
                                                 </a>
-                                                <a ng-show="project.user" ng-click="vm.release(project)" href=""> 
+                                                <a ng-show="project.user.id == user.objectId" ng-click="vm.release(project)" href=""> 
                                                       <i class="fa fa-check"></i> Release
                                                 </a>
                                           </td>

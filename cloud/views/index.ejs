@@ -74,10 +74,8 @@
 </aside>
 
 <!-- Right side column. Contains the navbar and content of the page -->
-<aside class="right-side" ng-app="TotemsApp" ui-view>
-
+<aside class="right-side" ng-app="TotemsApp" ng-init="user=<%= JSON.stringify(user) %>" ui-view>
 </aside><!-- /.right-side -->
-
 
 </div><!-- ./wrapper -->
 
@@ -90,12 +88,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
 <script type="text/javascript" src="/app/app.module.js"></script>
 <script type="text/javascript" src="/app/app.routes.js"></script>
-<script type="text/javascript" src="/app/components/projects/projects.factory.js"></script>
-<script type="text/javascript" src="/app/components/projects/projects.controller.js"></script>
-<script type="text/javascript">
-      		/*window.setTimeout(function () {
-      			location.reload();
-      		}, 60000);*/
-</script>
+<script type="text/javascript" src="/app/components/project/project.factory.js"></script>
+<script type="text/javascript" src="/app/components/project/project.controller.js"></script>
 </body>
 </html>

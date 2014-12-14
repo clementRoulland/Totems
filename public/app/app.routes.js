@@ -12,7 +12,7 @@
 		$stateProvider
 		.state('projects', {
 			url: '/',
-			templateUrl: '/app/components/projects/projects.view.html',
+			templateUrl: '/app/components/project/project.view.html',
 			controller: 'ProjectController',
 			controllerAs: 'vm',
 			resolve: {
