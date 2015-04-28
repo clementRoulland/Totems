@@ -10,15 +10,23 @@
 	function Config($stateProvider, $urlRouterProvider, $locationProvider) {
 
 		$stateProvider
-		.state('projects', {
-			url: '/',
-			templateUrl: '/app/components/project/project.view.html',
-			controller: 'ProjectController',
-			controllerAs: 'vm',
-			resolve: {
-				projectsPromise: projectPromise,
-			}
-		});
+                .state('projects', {
+                    url: '/',
+                    templateUrl: '/app/components/project/project.view.html',
+                    controller: 'ProjectController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        projectsPromise: projectPromise
+                    }
+                }).state('tiles', {
+                    url: '/tiles',
+                    templateUrl: '/app/components/tiles/view.html',
+                    controller: 'TilesController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        projectsPromise: projectPromise
+                    }
+                });
 
 		$urlRouterProvider.otherwise('/');
 

@@ -63,9 +63,14 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-             <li class="active">
-                  <a href="#/">
+             <li ui-sref-active="active">
+                  <a ui-sref="projects">
                        <i class="fa fa-dashboard"></i> <span>Projects</span>
+                 </a>
+           </li>
+             <li ui-sref-active="active">
+                  <a href="/#tiles">
+                       <i class="fa fa-th-large"></i> <span>Projects Beta</span>
                  </a>
            </li>
      </ul>
@@ -90,5 +95,6 @@
 <script type="text/javascript" src="/app/app.routes.js"></script>
 <script type="text/javascript" src="/app/components/project/project.factory.js"></script>
 <script type="text/javascript" src="/app/components/project/project.controller.js"></script>
+<script type="text/javascript" src="/app/components/tiles/controller.js"></script>
 </body>
 </html>

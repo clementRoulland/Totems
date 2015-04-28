@@ -1,0 +1,51 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Projects
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Projects</li>
+    </ol>
+</section>
+
+
+<section class="content">
+    <div class="row" ng-repeat="projects in vm.rows">
+        <div class="col-lg-2 col-xs-4" ng-repeat="project in projects">
+            <!-- small box -->
+            <div class="small-box "
+                 ng-class="{'bg-aqua':vm.isUnlock(project),'bg-green':vm.isMine(project,user),'bg-yellow':vm.isSingle(project,user),'bg-red':vm.isAwaiting(project,user)}">
+                <div class="inner">
+                    <p>{{ project.name }}</p>
+                    <p>
+                        {{ project.user.username||"Free" }}
+                        <span ng-show="project.stack" ng-repeat="stackUser in project.stack">,&nbsp;{{ stackUser.username }}</span></p>
+                </div>
+
+                <a class="small-box-footer" ng-show="!project.user" ng-click="vm.take(project)" href="">
+                    <i class="fa " ng-class="{'fa-unlock':!project.user,'fa-lock':project.user}"></i> Take <i class="fa fa-plus-square-o"></i>
+                </a>
+                <a class="small-box-footer"
+                   ng-show="project.user && (project.user.objectId != user.objectId) && !vm.userIsInStack(user, project.stack)"
+                   ng-click="vm.take(project)" href="">
+                    <i class="fa " ng-class="{'fa-unlock':!project.user,'fa-lock':project.user}"></i> Take next <i class="fa fa-plus-square"></i>
+                </a>
+                <a class="small-box-footer" ng-show="project.user.objectId == user.objectId"
+                   ng-click="vm.release(project)" href="">
+                    <i class="fa " ng-class="{'fa-unlock':!project.user,'fa-lock':project.user}"></i> Release <i class="fa fa-minus-square-o"></i>
+                </a>
+                <a class="small-box-footer"
+                   ng-show="project.user && (project.user.objectId != user.objectId) && vm.userIsInStack(user, project.stack)"
+                   ng-click="vm.release(project)" href="">
+                    <i class="fa " ng-class="{'fa-unlock':!project.user,'fa-lock':project.user}"></i> Release next <i class="fa fa-minus-square"></i>
+                </a>
+
+
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+
+</section><!-- /.content -->
