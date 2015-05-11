@@ -1,22 +1,24 @@
-(function() {
-	'use strict';
+(function ()
+{
+    'use strict';
 
-	angular
-	.module('TotemsApp')
-	.config(Config);
+    angular.module('TotemsApp').config(Config);
 
-	Config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
+    Config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
-	function Config($stateProvider, $urlRouterProvider, $locationProvider) {
+    function Config($stateProvider, $urlRouterProvider, $locationProvider)
+    {
 
-		$stateProvider
+        $urlRouterProvider.otherwise('/');
+        $stateProvider
                 .state('projects', {
                     url: '/',
                     templateUrl: '/app/components/project/project.view.html',
                     controller: 'ProjectController',
                     controllerAs: 'vm',
                     resolve: {
-                        projectsPromise: projectPromise
+                        projectsPromise: projectPromise,
+                        usersPromise: userPromise
                     }
                 }).state('tiles', {
                     url: '/tiles',
@@ -24,19 +26,25 @@
                     controller: 'TilesController',
                     controllerAs: 'vm',
                     resolve: {
-                        projectsPromise: projectPromise
+                        projectsPromise: projectPromise,
+                        usersPromise: userPromise
                     }
                 });
 
-		$urlRouterProvider.otherwise('/');
 
-		// use the HTML5 History API
-		$locationProvider.html5Mode(true);
-	};
+        // use the HTML5 History API
+//        $locationProvider.html5Mode(true);
+    };
 
-	projectPromise.$inject =  ['ProjectFactory'];
-	function projectPromise(ProjectFactory) {
-		return ProjectFactory.getAll();
-	}
+    projectPromise.$inject = ['ProjectFactory'];
+    function projectPromise(ProjectFactory)
+    {
+        return ProjectFactory.getAll();
+    }
+    userPromise.$inject = ['ProjectFactory'];
+    function userPromise(ProjectFactory)
+    {
+        return ProjectFactory.getUsers();
+    }
 
 })();

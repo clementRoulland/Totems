@@ -28,5 +28,38 @@ module.exports = function(){
 		res.redirect('/');
 	});
 
+	// Logs out the user
+	app.get('/list', function(req, res) {
+        console.log('try to get user list');
+
+        var query = new Parse.Query(Parse.User);
+        query.find({
+            success: function (results)
+            {
+                var users = [];
+                results.forEach(function (iteratedProject)
+                {
+                    users.push(toJSON(iteratedProject));
+                });
+                console.log(users);
+                res.json(users);
+            },
+            error: error
+        });
+	});
+    function toJSON(user)
+    {
+        return {
+            id: user.id,
+            username: user.get('username'),
+        };
+    }
+
+    function error(object, error)
+    {
+        console.error(error);
+        error.status = 'ko';
+        res.json(error);
+    }
 	return app;
 }();

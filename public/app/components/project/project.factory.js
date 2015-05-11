@@ -9,12 +9,25 @@
 
 	function ProjectFactory($http){
 		return {
+            getUsers: getUsers,
 			getAll: getAll,
 			get: get,
 			take: take,
 			release: release,
 		}
 		
+		function getUsers() {
+			return $http.get('/user/list')
+			.then(getAllComplete)
+			.catch(getAllFailed);
+
+			function getAllComplete(response) {
+				return response.data;
+			}
+			function getAllFailed(error) {
+				console.error('User GetAll error: ' + error.data);
+			}
+		};
 		function getAll() {
 			return $http.get('/api/project')
 			.then(getAllComplete)

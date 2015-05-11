@@ -4,21 +4,51 @@
 
     angular
             .module('TotemsApp')
-            .controller('TilesController', TilesController);
+            .controller('TilesController', TilesController)
+            .directive('uiTooltip', TooltipDirective);
 
-    TilesController.$inject = ['projectsPromise', 'ProjectFactory', '$interval'];
+    TilesController.$inject = ['projectsPromise', 'usersPromise', 'ProjectFactory', '$interval', '$filter'];
 
-    function TilesController(projectsPromise, ProjectFactory, $interval)
+    function TooltipDirective()
+    {
+        return {
+            restrict: 'A',
+            scope: {
+                uiTooltip: "="
+            },
+            link: function (scope, element, attrs)
+            {
+                var user = scope.uiTooltip.user;
+                var title = "<H3>" + user.username + "</H3><p>" + scope.uiTooltip.date + "</p>";
+                element.tooltip({placement: 'right', trigger: 'hover focus', title: title, html: true})
+            }
+        };
+    };
+
+    function TilesController(projectsPromise, usersPromise, ProjectFactory, $interval, $filter)
     {
         var vm = this;
         vm.projects = projectsPromise;
+        vm.users = {};
 
-        var rows = [];
-        for (var i = 0; i < vm.projects.length; i++) {
-            if (i % 6 == 0) rows.push([]);
-            rows[rows.length - 1].push(vm.projects[i]);
+        usersPromise.forEach(function (user)
+        {
+            vm.users[user.id] = user;
+        });
+
+        function refreshMatrix()
+        {
+            vm.rows = [];
+            vm.projects = $filter('orderBy')(vm.projects, ['type', 'name'], false);
+            for (var i = 0; i < vm.projects.length; i++) {
+                if (i % 6 == 0) vm.rows.push([]);
+                vm.projects[i].currentUsers = getUsers(vm.projects[i]);
+                vm.rows[vm.rows.length - 1].push(vm.projects[i]);
+            }
         }
-        vm.rows = rows;
+
+        vm.rows = [];
+        refreshMatrix()
         vm.take = take;
         vm.release = release;
         vm.userIsInStack = userIsInStack;
@@ -32,13 +62,7 @@
                     {
                         console.log(data);
                         vm.projects[index] = data;
-
-                        var rows = [];
-                        for (var i = 0; i < vm.projects.length; i++) {
-                            if (i % 6 == 0) rows.push([]);
-                            rows[rows.length - 1].push(vm.projects[i]);
-                        }
-                        vm.rows = rows;
+                        refreshMatrix();
                     })
                     .catch();
         };
@@ -51,15 +75,8 @@
                     {
                         console.log(data);
                         vm.projects[index] = data;
-
-                        var rows = [];
-                        for (var i = 0; i < vm.projects.length; i++) {
-                            if (i % 6 == 0) rows.push([]);
-                            rows[rows.length - 1].push(vm.projects[i]);
-                        }
-                        vm.rows = rows;
-                    })
-                    .catch();
+                        refreshMatrix();
+                    }).catch();
         };
 
         function refresh()
@@ -67,55 +84,47 @@
             ProjectFactory.getAll().then(function (data)
             {
                 vm.projects = data;
+                refreshMatrix();
 
-                var rows = [];
-                for (var i = 0; i < vm.projects.length; i++) {
-                    if (i % 6 == 0) rows.push([]);
-                    rows[rows.length - 1].push(vm.projects[i]);
-                }
-                vm.rows = rows;
-            })
-                    .catch();
+            }).catch();
+        }
+
+        function isAvailaible(project, user)
+        {
+            return !project.requests || project.requests.length === 0 ||
+                   (project.current && (project.current.id !== user.objectId));
         }
 
         function isUnlock(project)
         {
-            return !project.user
+            return !project.requests || project.requests.length === 0;
         }
 
         vm.isUnlock = isUnlock;
 
         function isMine(project, user)
         {
-            return project.user && (project.user.objectId === user.objectId);
+            return project.current && (project.current.id === user.objectId);
         }
 
-        function isSingle(project, user)
+        function iWait(project, user)
         {
-            return project.user && project.stack.length === 0;
-        }
-
-        function isAwaiting(project, user)
-        {
-            return project.user && project.stack.length > 0;
-        }
-
-        vm.isMine = isMine;
-        vm.isSingle = isSingle;
-        vm.isAwaiting = isAwaiting;
-
-        vm.getCompleteStack = function (project)
-        {
-            var result = "";
-            if (project.user) {
-                result += project.user.username;
-                angular.forEach(project.stack, function (user)
+            var wait = false;
+            if (project.requests) {
+                project.requests.forEach(function (entry)
                 {
-                    result += user.username;
-                })
+                    if (entry.user.objectId === user.objectId) {
+                        wait = true;
+                    }
+                });
             }
-            return result;
+            return wait;
         }
+
+        vm.isAvailaible = isAvailaible;
+        vm.isMine = isMine;
+        vm.iWait = iWait;
+
         function userIsInStack(user, stack)
         {
             var isInStack = false;
@@ -127,6 +136,25 @@
                 }
             });
             return isInStack;
+        }
+
+        function getUsers(project)
+        {
+            var users = [];
+            if (project.requests) {
+                project.requests.forEach(function (entry)
+                {
+                    if (!project.current) {
+                        project.current = vm.users[entry.user.objectId];
+                    }
+
+                    users.push({
+                        user: vm.users[entry.user.objectId],
+                        date: entry.date
+                    });
+                });
+            }
+            return users;
         }
     };
 

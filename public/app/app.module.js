@@ -1,7 +1,6 @@
-(function() {
-	'use strict';
-
-	angular
-	.module('TotemsApp', ['ui.router']);
+(function ()
+{
+    'use strict';
+    angular.module('TotemsApp', ['ui.router']);
 
 })();
