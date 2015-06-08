@@ -9,10 +9,10 @@
     function Config($stateProvider, $urlRouterProvider, $locationProvider)
     {
 
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/booked');
         $stateProvider
                 .state('projects', {
-                    url: '/',
+                    url: '/projects',
                     templateUrl: '/app/components/project/project.view.html',
                     controller: 'ProjectController',
                     controllerAs: 'vm',
@@ -23,6 +23,15 @@
                 }).state('tiles', {
                     url: '/tiles',
                     templateUrl: '/app/components/tiles/view.html',
+                    controller: 'TilesController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        projectsPromise: projectPromise,
+                        usersPromise: userPromise
+                    }
+                }).state('booked', {
+                    url: '/booked',
+                    templateUrl: '/app/components/booked/view.html',
                     controller: 'TilesController',
                     controllerAs: 'vm',
                     resolve: {

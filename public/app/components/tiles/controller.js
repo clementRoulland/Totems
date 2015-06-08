@@ -38,13 +38,19 @@
 
         function refreshMatrix()
         {
-            vm.rows = [];
+//            vm.rows = [];
             vm.projects = $filter('orderBy')(vm.projects, ['type', 'name'], false);
             for (var i = 0; i < vm.projects.length; i++) {
-                if (i % 6 == 0) vm.rows.push([]);
+//                if (i % 6 == 0) vm.rows.push([]);
                 vm.projects[i].currentUsers = getUsers(vm.projects[i]);
-                vm.rows[vm.rows.length - 1].push(vm.projects[i]);
+//                vm.rows[vm.rows.length - 1].push(vm.projects[i]);
             }
+        }
+
+        vm.hasBookedProject = function ()
+        {
+            var booked = $filter('filter')(vm.projects, isLock, false);
+            return booked.length > 0
         }
 
         vm.rows = [];
@@ -95,6 +101,12 @@
                    (project.current && (project.current.id !== user.objectId));
         }
 
+        function isLock(project)
+        {
+            return project.requests && project.requests.length > 0
+        }
+
+        vm.isLock = isLock;
         function isUnlock(project)
         {
             return !project.requests || project.requests.length === 0;

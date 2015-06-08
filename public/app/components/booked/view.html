@@ -10,15 +10,29 @@
     }
 </style>
 <section class="content">
-    <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search..." ng-model="search">
-              <span class="input-group-btn">
-                <button name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-              </span>
-        </div>
-    </form>
-    <div class="col-lg-2 col-xs-4" ng-repeat="project in vm.projects|filter:search">
+    <!--<div class="row" ng-repeat="projects in vm.rows">-->
+
+
+    <div ng-show="!vm.hasBookedProject()" style="text-align: center">
+        <section class="content">
+            <div class="callout callout-info">
+                <h4>All is done</h4>
+
+                <p>Aucune livraison en cour.</p>
+                <a class="btn btn-block btn-social btn-twitter" href="/#tiles"
+                   style="text-align: center;width: 310px;margin: auto;">
+                    <i class="fa fa-bookmark"></i> Reserver un projet via "Reserver"
+                </a>
+                <!--<a class="btn btn-app" href="/#tiles">-->
+                <!--<i class="fa fa-bookmark"></i> Reservation-->
+                <!--</a>-->
+            </div>
+            <!-- Default box -->
+        </section>
+        <i class="fa fa-cubes" style="font-size: 40em;opacity: 0.4"></i>
+    </div>
+
+    <div class="col-lg-2 col-xs-4" ng-repeat="project in vm.projects|filter:vm.isLock">
         <!-- small box -->
         <div class="small-box "
              ng-class="{'bg-aqua':vm.isUnlock(project),'bg-green':vm.isMine(project,user),'bg-red':vm.iWait(project,user),'bg-yellow':!vm.iWait(project,user)&&!vm.isUnlock(project,user)}">
